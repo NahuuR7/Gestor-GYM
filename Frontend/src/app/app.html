@@ -1,0 +1,121 @@
+<header>
+    <div class="container">
+        <h1>Spartacus GYM</h1>
+        <p>Gestor de Miembros</p>
+    </div>
+</header>
+    
+<div class="container">
+    <div class="stats">
+        <div class="stat-card">
+            <div class="stat-value" id="total-users">{{ totalMiembros }}</div>
+            <div class="stat-label">Total de Miembros</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value" id="morning-users">{{ turnoManana }}</div>
+            <div class="stat-label">Turno Mañana</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value" id="active-users">{{ miembrosActivos }}</div>
+            <div class="stat-label">Miembros Activos</div>
+        </div>
+    </div>
+    
+    <div class="main-content">
+        <!-- FORMULARIO -->
+        <div class="form-container">
+            <!-- El título cambia automáticamente -->
+            <h2 id="form-title">{{ editando ? 'Actualizar Miembro' : 'Agregar Nuevo Miembro' }}</h2>
+            <form id="user-form">
+                
+                <div class="form-group">
+                    <label for="dni">DNI</label>
+                    <input type="text" id="dni" name="dni" [(ngModel)]="nuevoMiembro.dni" required placeholder="Sin puntos ni espacios">
+                </div>
+                
+                <div class="form-group">
+                    <label for="nombre">Nombre</label>
+                    <input type="text" id="nombre" name="nombre" [(ngModel)]="nuevoMiembro.nombre" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="apellido">Apellido</label>
+                    <input type="text" id="apellido" name="apellido" [(ngModel)]="nuevoMiembro.apellido" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="edad">Edad</label>
+                    <input type="number" id="edad" name="edad" [(ngModel)]="nuevoMiembro.edad" min="16" max="100" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="turno">Turno</label>
+                    <select id="turno" name="turno" [(ngModel)]="nuevoMiembro.turno" required>
+                        <option value="">Selecciona un turno</option>
+                        <option value="MANANA">Mañana</option>
+                        <option value="TARDE">Tarde</option>
+                        <option value="NOCHE">Noche</option>
+                    </select>
+                </div>
+                
+                <div class="actions">
+                    <!-- El texto del botón cambia según la acción -->
+                    <button type="button" class="btn-success" (click)="guardarMiembro()">
+                        {{ editando ? 'Actualizar Datos' : 'Agregar Miembro' }}
+                    </button>
+                    <!-- El botón cancelar solo aparece si estamos editando -->
+                    <button type="button" class="btn-danger" *ngIf="editando" (click)="cancelarEdicion()">
+                        Cancelar
+                    </button>
+                </div>
+            </form>
+        </div>
+        
+        <!-- LISTA DE MIEMBROS -->
+        <div class="users-container">
+            <h2>Lista de Miembros</h2>
+            
+            <div class="filters">
+                <!-- Agregamos [(ngModel)] para capturar el valor, (ngModelChange) para buscar al instante, y mayúsculas -->
+                <select class="filter-select" id="filter-turno" [(ngModel)]="filtroTurno" (ngModelChange)="obtenerMiembros()">
+                    <option value="">Todos los turnos</option>
+                    <option value="MANANA">Mañana</option>
+                    <option value="TARDE">Tarde</option>
+                    <option value="NOCHE">Noche</option>
+                </select>
+            </div>
+            
+            <div id="users-list">
+                <div class="user-card" *ngFor="let miembro of miembros" style="border: 1px solid #ccc; padding: 10px; margin-bottom: 15px; border-radius: 5px; background: white;">
+                    
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div class="user-details">
+                            <strong style="font-size: 1.1rem; color: #333;">{{ miembro.nombre }} {{ miembro.apellido }}</strong>
+                            <div style="color: #666; font-size: 0.9rem; margin-top: 5px;">DNI: {{ miembro.dni }} | Edad: {{ miembro.edad }} años</div>
+                        </div>
+                        
+                        <div class="user-turn" style="background-color: #007bff; color: white; padding: 5px 10px; border-radius: 15px; font-size: 0.8rem; font-weight: bold;">
+                            {{ miembro.turno }}
+                        </div>
+                    </div>
+
+                    <!-- Botones de Acción (Editar / Eliminar) -->
+                    <div style="margin-top: 15px; display: flex; gap: 10px; justify-content: flex-end; border-top: 1px solid #eee; padding-top: 10px;">
+                        <button type="button" (click)="editarMiembro(miembro)" style="background-color: #ffc107; color: #000; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold;">Editar</button>
+                        <button type="button" (click)="eliminarMiembro(miembro.id)" style="background-color: #dc3545; color: #fff; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold;">Eliminar</button>
+                    </div>
+                </div>
+
+                <div *ngIf="miembros.length === 0" class="empty-message" style="text-align: center; color: #888; padding: 20px;">
+                    No hay miembros registrados en este turno.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <div class="container">
+        <p id="footer-text">Spartacus GYM © 2026</p>
+    </div>
+</footer>
