@@ -68,9 +68,13 @@ npm run dev
 Gestor-GYM/
 
 ├── src/            # Código fuente principal
+
 ├── public/         # Archivos estáticos
+
 ├── docs/           # Documentación adicional
+
 ├── .gitignore
+
 └── README.md
 
 
